@@ -1,4 +1,4 @@
-﻿#include <stdio.h>
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <locale.h>
@@ -21,19 +21,24 @@ void print_array(employee_t employees[], int size); // Функция для п�
 employee_t* search_by_lastname(employee_t* employees, int size, char* lastname); // Функция для поиска по фамилии
 void sort_employees_by_salary(employee_t employees[], int size); // Функция для сравнения для сортировки по зарплате
 int compare_by_salary(const void* a, const void* b); // Функция сортировки массива qsort
-
+int output_file(char* filename, employee_t* arr, int n); // Для записи файла
+int input_file(char* filename, employee_t* arr); // Для чтения файла
 
 int main() {
     setlocale(LC_ALL, "");
     system("chcp 1251");
     employee_t employees[SIZE];
     int num = 0;
+    int is_filled = 0;
+    char filename[50] = "database.txt";
 
     do {
         printf("\n====>>> МЕНЮ <<<===\n");
-        printf("1 - Инициализация и вывод\n");
+        printf("1 - Инициализация и вывод массива\n");
         printf("2 - Поиск\n");
         printf("3 - Сортировка по зарплате (qsort)\n");
+        printf("4 - Запись массива в файл\n");
+        printf("5 - Чтение массива из файла\n");
         printf("0 - Выход\n");
         printf("Ваш выбор: ");
 
@@ -49,6 +54,7 @@ int main() {
             print_array(employees, SIZE);
             break;
         }
+
         case 2: {
             printf("\n");
             char search_name[50];
@@ -65,11 +71,38 @@ int main() {
             }
             break;
         }
+
         case 3: {
             printf("\n");
             sort_employees_by_salary(employees, SIZE);
             printf("Массив отсортирован по зарплате:\n");
             print_array(employees, SIZE);
+            break;
+        }
+
+        case 4: { 
+            printf("\nВведите имя файла для записи (например, data.txt): ");
+            scanf("%s", filename);
+            if (output_file(filename, employees, SIZE)) {
+                printf("Данные успешно записаны в %s\n", filename);
+            }
+            else {
+                printf("Ошибка записи файла!\n");
+            }
+            break;
+        }
+
+        case 5: { 
+            printf("\nВведите имя файла для чтения: ");
+            scanf("%s", filename);
+            int count = input_file(filename, employees);
+            if (count > 0) {
+                printf("Успешно прочитано %d записей.\n", count);
+                print_array(employees, SIZE);
+            }
+            else {
+                printf("Ошибка чтения или файл пуст/не найден.\n");
+            }
             break;
         }
         case 0:
@@ -85,11 +118,11 @@ int main() {
 
 void fill_array(employee_t employees[], int size) {
     employee_t const_data[SIZE] = {
-        {"Иванов", "Иван", "Иванович", "Инженер", 50000.0, "15.05.1985"},
-        {"Петрова", "Мария", "Сергеевна", "Бухгалтер", 45000.0, "22.11.1990"},
-        {"Сидоров", "Алексей", "Петрович", "Менеджер", 60000.0, "03.08.1988"},
-        {"Кузнецова", "Елена", "Викторовна", "Дизайнер", 55000.0, "17.09.1992"},
-        {"Смирнов", "Дмитрий", "Александрович", "Программист", 80000.0, "30.01.1987"}
+        {"Иванов", "Иван", "Иванович", "Инженер", 50000, "15.05.1985"},
+        {"Петрова", "Мария", "Сергеевна", "Бухгалтер", 45000, "22.11.1990"},
+        {"Сидоров", "Алексей", "Петрович", "Менеджер", 60000, "03.08.1988"},
+        {"Кузнецова", "Елена", "Викторовна", "Дизайнер", 55000, "17.09.1992"},
+        {"Смирнов", "Дмитрий", "Алексеевич", "Директор", 80000, "30.01.1987"}
     };
 
     for (int i = 0; i < size; i++) {
@@ -134,4 +167,45 @@ int compare_by_salary(const void* a, const void* b) {
 
 void sort_employees_by_salary(employee_t employees[], int size) {
     qsort(employees, size, sizeof(employee_t), compare_by_salary);
+}
+
+int output_file(char* filename, employee_t* arr, int n) {
+    FILE* fp = fopen(filename, "w");
+    if (fp == NULL) {
+        return 0; 
+    }
+
+    for (int i = 0; i < n; i++) {
+        fprintf(fp, "%s %s %s %s %.2f %s\n",
+            arr[i].lastName,
+            arr[i].firstName,
+            arr[i].patronymic,
+            arr[i].position,
+            arr[i].salary,
+            arr[i].birthDate);
+    }
+
+    fclose(fp);
+    return 1;
+}
+
+int input_file(char* filename, employee_t* arr) {
+    FILE* fp = fopen(filename, "r");
+    if (fp == NULL) {
+        return 0;
+    }
+
+    int i = 0;
+    while (i < SIZE && fscanf(fp, "%s %s %s %s %f %s",
+        arr[i].lastName,
+        arr[i].firstName,
+        arr[i].patronymic,
+        arr[i].position,
+        &arr[i].salary,
+        arr[i].birthDate) == 6) {
+        i++;
+    }
+
+    fclose(fp);
+    return i;
 }
