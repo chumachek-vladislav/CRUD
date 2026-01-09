@@ -15,14 +15,14 @@ typedef struct Employee {
     char birthDate[11];
 } employee_t;
 
-void fill_array(employee_t employees[], int size); // Функция для заполнения массива константами
-void print_employee(employee_t emp); // Функция для печати одной записи
-void print_array(employee_t employees[], int size); // Функция для печати всего массива
-employee_t* search_by_lastname(employee_t* employees, int size, char* lastname); // Функция для поиска по фамилии
-void sort_employees_by_salary(employee_t employees[], int size); // Функция для сравнения для сортировки по зарплате
-int compare_by_salary(const void* a, const void* b); // Функция сортировки массива qsort
-int output_file(char* filename, employee_t* arr, int n); // Для записи файла
-int input_file(char* filename, employee_t* arr); // Для чтения файла
+void fill_array(employee_t employees[], int size); 
+void print_employee(employee_t emp); 
+void print_array(employee_t employees[], int size); 
+employee_t* search_by_lastname(employee_t* employees, int size, char* lastname); 
+void sort_employees_by_salary(employee_t employees[], int size); 
+int compare_by_salary(const void* a, const void* b); 
+int output_file(char* filename, employee_t* arr, int n); 
+int input_file(char* filename, employee_t* arr); 
 
 int main() {
     setlocale(LC_ALL, "");
@@ -209,3 +209,4 @@ int input_file(char* filename, employee_t* arr) {
     fclose(fp);
     return i;
 }
+
