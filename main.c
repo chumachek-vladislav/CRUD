@@ -2,10 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <locale.h>
-
 #define SIZE 5
 
-// Структура "Сотрудник"
 typedef struct Employee {
     char lastName[50];
     char firstName[50];
@@ -209,4 +207,5 @@ int input_file(char* filename, employee_t* arr) {
     fclose(fp);
     return i;
 }
+
 
