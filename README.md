@@ -98,6 +98,8 @@ gcc -std=c99 -o employee_db 21.c func.c
 ./employee_db      # Linux/macOS
 employee_db.exe    # Windows
 
+```
+
 #### **Выберите действие из главного меню (1-5, 0)**
 
 #### **Основные сценарии:**
