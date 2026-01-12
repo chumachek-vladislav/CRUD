@@ -1,76 +1,86 @@
 ﻿#ifndef FUNC_H
 #define FUNC_H
 #include <stdio.h>
-#define SIZE 5
 
-typedef struct Employee {
-    char lastName[50];
-    char firstName[50];
-    char patronymic[50];
-    char position[50];
-    float salary;
-    char birthDate[11];
-} employee_t;
+#define SIZE 5 
+#define MAX_EMPLOYEES 50 
+
+typedef struct {
+    char surname[50];      
+    char name[50];         
+    char patronymic[50];  
+    char position[50];      
+    double salary;        
+    char birthDate[15];     
+} Employee;
+
+ /**
+  * Заполнение массива сотрудников тестовыми данными
+  * @param employees массив структур
+  * @param size размер массива
+  */
+void fill_array(Employee employees[], int size);
 
 /**
- * Заполнение массива сотрудников предустановленными (тестовыми) данными
- * @param employees массив структур сотрудников
- * @param size размер массива
+ * Вывод одного сотрудника в консоль
  */
-void fill_array(employee_t employees[], int size);
+void print_employee(Employee emp);
 
 /**
- * Вывод информации об одном сотруднике в консоль
- * @param emp структура сотрудника для вывода
+ * Вывод таблицы сотрудников
  */
-void print_employee(employee_t emp);
+void print_array(Employee employees[], int size);
 
 /**
- * Вывод списка всех сотрудников из массива
- * @param employees массив структур сотрудников
- * @param size размер массива
+ * Поиск по фамилии
  */
-void print_array(employee_t employees[], int size);
+Employee* search_by_lastname(Employee* employees, int size, char* lastname);
 
 /**
- * Поиск сотрудника в массиве по фамилии
- * @param employees указатель на массив сотрудников
- * @param size размер массива
- * @param lastname искомая фамилия
- * @return указатель на найденную структуру или NULL, если не найден
+ * Сортировка по зарплате (qsort)
  */
-employee_t* search_by_lastname(employee_t* employees, int size, char* lastname);
+void sort_employees_by_salary(Employee employees[], int size);
 
 /**
- * Сортировка массива сотрудников по возрастанию зарплаты
- * @param employees массив сотрудников
- * @param size размер массива
- */
-void sort_employees_by_salary(employee_t employees[], int size);
-
-/**
- * Функция сравнения двух сотрудников по зарплате (для qsort)
- * @param a указатель на первый элемент
- * @param b указатель на второй элемент
- * @return -1 если a < b, 1 если a > b, 0 если равны
+ * Компаратор для qsort
  */
 int compare_by_salary(const void* a, const void* b);
 
 /**
- * Запись массива сотрудников в текстовый файл
- * @param filename имя файла для записи
- * @param arr указатель на массив сотрудников
- * @param n количество элементов для записи
- * @return 1 - успешно, 0 - ошибка открытия файла
+ * Запись массива в файл
  */
-int output_file(char* filename, employee_t* arr, int n);
+int output_file(char* filename, Employee* arr, int n);
 
 /**
- * Чтение данных о сотрудниках из текстового файла в массив
- * @param filename имя файла для чтения
- * @param arr указатель на массив для заполнения
- * @return количество успешно считанных структур
+ * Чтение из файла в массив
  */
-int input_file(char* filename, employee_t* arr);
+int input_file(char* filename, Employee* arr);
+
+/**
+ * Читает входной файл посимвольно и переписывает его в выходной,
+ * заменяя последнюю букву каждого слова на цифру '5'
+ * @param input указатель на открытый файл для чтения
+ * @param output указатель на открытый файл для записи
+ */
+void process_text(FILE* input, FILE* output);
+
+/**
+ * Открывает файлы по заданным именам и запускает процесс обработки текста
+ * @param input_filename имя исходного файла
+ * @param output_filename имя файла для сохранения результата
+ * @return 0 - успешно, 1 - ошибка открытия файлов
+ */
+int read_and_process_file(char* input_filename, char* output_filename);
+
+ /**
+  * Ввод данных с клавиатуры.
+  * Внутри конвертирует введенные день/месяц/год в строку birthDate.
+  */
+void fill_employees_manual(Employee* emp, int n);
+
+/**
+ * Сохранение отчета (форматированного)
+ */
+int save_report(char* filename, Employee* emp, int n);
 
 #endif

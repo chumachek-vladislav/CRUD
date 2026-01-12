@@ -1,4 +1,5 @@
-﻿#include <stdio.h>
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
 #include "func.h" 
@@ -6,88 +7,58 @@
 int main() {
     setlocale(LC_ALL, "");
     system("chcp 1251");
-    employee_t employees[SIZE];
+
+    Employee employees[SIZE]; 
     int num = 0;
     char filename[50] = "database.txt";
 
     do {
         printf("\n====>>> МЕНЮ <<<===\n");
-        printf("1 - Инициализация и вывод массива\n");
+        printf("1 - Инициализация и вывод\n");
         printf("2 - Поиск\n");
-        printf("3 - Сортировка по зарплате (qsort)\n");
+        printf("3 - Сортировка по зарплате\n");
         printf("4 - Запись в файл\n");
         printf("5 - Чтение из файла\n");
         printf("0 - Выход\n");
         printf("Ваш выбор: ");
 
         if (scanf("%d", &num) != 1) {
-            while (getchar() != '\n');
-            num = 0;
+            while (getchar() != '\n'); num = 0;
         }
 
         switch (num) {
-        case 1: {
-            printf("\n");
+        case 1:
             fill_array(employees, SIZE);
             print_array(employees, SIZE);
             break;
-        }
-
         case 2: {
-            printf("\n");
             char search_name[50];
-            printf("Введите фамилию для поиска: ");
+            printf("Введите фамилию: ");
             scanf("%s", search_name);
-
-            employee_t* found = search_by_lastname(employees, SIZE, search_name);
-            if (found != NULL) {
-                printf("Найден сотрудник:\n");
+            Employee* found = search_by_lastname(employees, SIZE, search_name);
+            if (found) {
+                printf("Найден:\n");
                 print_employee(*found);
             }
-            else {
-                printf("Сотрудник с фамилией '%s' не найден.\n", search_name);
-            }
+            else printf("Не найдено\n");
             break;
         }
-
-        case 3: {
-            printf("\n");
+        case 3:
             sort_employees_by_salary(employees, SIZE);
-            printf("Массив отсортирован по зарплате:\n");
+            printf("Отсортировано.\n");
             print_array(employees, SIZE);
             break;
-        }
-
-        case 4: {
-            printf("\nВведите имя файла для записи (например, data.txt): ");
-            scanf("%s", filename);
-            if (output_file(filename, employees, SIZE)) {
-                printf("Данные успешно записаны в %s\n", filename);
-            }
-            else {
-                printf("Ошибка записи файла!\n");
-            }
+        case 4:
+            printf("Файл для записи: "); scanf("%s", filename);
+            output_file(filename, employees, SIZE);
             break;
-        }
-
-        case 5: {
-            printf("\nВведите имя файла для чтения: ");
-            scanf("%s", filename);
-            int count = input_file(filename, employees);
-            if (count > 0) {
-                printf("Успешно прочитано %d записей.\n", count);
-                print_array(employees, SIZE);
-            }
-            else {
-                printf("Ошибка чтения или файл пуст/не найден.\n");
-            }
+        case 5:
+            printf("Файл для чтения: "); scanf("%s", filename);
+            if (input_file(filename, employees) > 0) print_array(employees, SIZE);
+            else printf("Ошибка чтения\n");
             break;
-        }
-        case 0:
-            printf("Выход из программы\n");
-            break;
-        default:
-            printf("Неверный выбор! Попробуйте снова.\n");
+        case 0: break;
+        default: printf("Неверно\n");
         }
     } while (num != 0);
 
